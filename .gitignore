@@ -1,0 +1,24 @@
+# Datasets
+bkash-presents-nsucec-datathon/
+*.parquet
+
+# Python Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# CatBoost output
+catboost_info/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# IDE files
+.vscode/
+.idea/
