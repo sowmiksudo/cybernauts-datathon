@@ -1,0 +1,27 @@
+{
+    "competition_metadata": {
+        "name": "FictiPay Churn Prediction",
+        "metric": "AUC-ROC",
+        "evaluation_type": "Binary Classification",
+        "base_churn_rate": 0.127
+    },
+    "large_scale_data_handling": {
+        "framework": "Polars LazyFrames",
+        "ingestion_strategy": "Out-of-core streaming",
+        "optimization": "Downcast numeric types early (float64 -> float32, int64 -> int32) to clean VRAM space for GPU training."
+    },
+    "verified_structural_anomalies": {
+        "self_loop_masking": {
+            "finding": "100% of CashIn and CashOut transactions are logged with SRC_ACCOUNT == DST_ACCOUNT because Agent profiles are omitted from the KYC matrix.",
+            "action_required": "Do not treat self-loops as a separate leakage feature. They are mathematically identical to basic CashIn/CashOut counts. The pipeline must focus on the monetary volume relationship between them instead of raw counts."
+        },
+        "synthetic_vulnerabilities_to_audit": [
+            "Timestamp Truncation: Check if churning users have transaction logs that abruptly stop mid-March, while active users stretch until March 31st.",
+            "ID Sequence Ordering: Check if the alphanumeric index string values of TrxID or ACCOUNT_ID map chronologically or cluster target classes."
+        ]
+    },
+    "imbalance_mitigation": {
+        "method": "Cost-sensitive gradient scaling",
+        "implementation": "Set scale_pos_weight = 6.88 in LightGBM/XGBoost configuration based on the 1:7 negative-to-positive label ratio."
+    }
+}
